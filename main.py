@@ -31,9 +31,11 @@ def main():
         for asteroid in asteroids:
             if asteroid.collision_check(player):
                 print("Game over!")
+                print(f"Your score is {player.score} point(s)")
                 return
             for bullet in shots:
                 if asteroid.collision_check(bullet):
+                    player.score += 1
                     asteroid.split()
                     bullet.kill()
         screen.fill(color="black")
