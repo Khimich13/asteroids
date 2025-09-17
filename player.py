@@ -10,6 +10,7 @@ class Player(CircleShape):
         self.velocity = pygame.Vector2(0, 0)
         self.rotation = 0
         self.timer = 0
+        self.score = 0
 
     # in the player class
     def triangle(self):
@@ -45,8 +46,8 @@ class Player(CircleShape):
     def draw(self, screen):
         pygame.draw.polygon(
             screen,
-            color="white", 
-            points=self.triangle(), 
+            color="white",
+            points=self.triangle(),
             width=2
         )
     
