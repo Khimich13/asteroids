@@ -10,6 +10,7 @@ class Player(CircleShape):
         self.velocity = pygame.Vector2(0, 0)
         self.rotation = 0
         self.timer = 0
+        self.score = 0
         self.lives = PLAYER_INITIAL_LIVES
 
     # in the player class
