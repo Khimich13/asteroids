@@ -10,6 +10,7 @@ class Player(CircleShape):
         self.velocity = pygame.Vector2(0, 0)
         self.rotation = 0
         self.timer = 0
+        self.lives = PLAYER_INITIAL_LIVES
 
     # in the player class
     def triangle(self):
@@ -19,6 +20,16 @@ class Player(CircleShape):
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
         return [a, b, c]
+    
+    def spawn(self, asteroids):
+        self.velocity = pygame.Vector2(0, 0)
+        self.rotation = 0
+        self.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        for asteroid in asteroids:
+            distance = asteroid.position.distance_to(self.position)
+            if distance <= asteroid.radius + self.radius + MAX_SAFE_DISTANCE:
+                asteroid.kill()
+
     
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt

@@ -30,8 +30,12 @@ def main():
         updatable.update(dt)
         for asteroid in asteroids:
             if asteroid.collision_check(player):
-                print("Game over!")
-                return
+                player.lives -= 1
+                print(f"lives: {player.lives}")
+                if player.lives == 0:
+                    print("Game over!")
+                    return
+                player.spawn(asteroids)
             for bullet in shots:
                 if asteroid.collision_check(bullet):
                     asteroid.split()
