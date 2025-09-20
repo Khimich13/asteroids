@@ -57,8 +57,8 @@ class Player(CircleShape):
     def draw(self, screen):
         pygame.draw.polygon(
             screen,
-            color="white", 
-            points=self.triangle(), 
+            color="white",
+            points=self.triangle(),
             width=2
         )
     
