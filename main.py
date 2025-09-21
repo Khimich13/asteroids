@@ -23,7 +23,7 @@ def main():
     Shot.containers = (shots, updatable, drawable)
     Explosion.containers = drawable
 
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    player = Player(CENTER_X, CENTER_Y)
     AsteroidField()
 
     running = True

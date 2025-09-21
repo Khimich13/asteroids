@@ -8,6 +8,13 @@ class Asteroid(CircleShape):
         super().__init__(x, y, radius)
 
     def update(self, dt):
+        trajactory = self.position + self.velocity * dt
+        random_angle = random.uniform(-180, 180)
+        off_height = (trajactory.y < 0 or trajactory.y > SCREEN_HEIGHT) and abs(trajactory.y) > abs(self.position.y)
+        off_width = (trajactory.x < 0 or trajactory.x > SCREEN_WIDTH) and abs(trajactory.x) > abs(self.position.x)
+        if off_height or off_width:
+            self.velocity = self.velocity.rotate(random_angle)
+            
         self.position += self.velocity * dt
 
     def draw(self, screen):
