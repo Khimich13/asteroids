@@ -69,6 +69,18 @@ class Player(CircleShape):
         shot.velocity = pygame.Vector2(0,1).rotate(self.rotation)
         shot.velocity *= PLAYER_SHOOT_SPEED
         self.timer = PLAYER_SHOOT_COOLDOWN
+
+    def collided(self):
+        self.lives -= 1
+        print(f"lives: {self.lives}")
+
+    def is_dead(self):
+        if self.lives == 0:
+            print("Game over!")
+            print(f"Your score is {self.score} point(s)")
+            return True
+        return False
+        
         
 
     

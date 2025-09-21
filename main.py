@@ -3,6 +3,7 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from explosion import Explosion
 from constants import *
 
 def main():
@@ -20,36 +21,42 @@ def main():
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
     Shot.containers = (shots, updatable, drawable)
+    Explosion.containers = drawable
 
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
     AsteroidField()
-    while True:
+
+    running = True
+    
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
+            
         updatable.update(dt)
+
         for asteroid in asteroids:
             if asteroid.collision_check(player):
-                player.lives -= 1
-                print(f"lives: {player.lives}")
-                if player.lives == 0:
-                    print("Game over!")
-                    print(f"Your score is {player.score} point(s)")
+                player.collided()
+                if player.is_dead():
                     return
                 player.spawn(asteroids)
             for bullet in shots:
                 if asteroid.collision_check(bullet):
                     player.score += 1
+                    Explosion(asteroid.position.x, asteroid.position.y, asteroid.radius)
                     asteroid.split()
                     bullet.kill()
+
         screen.fill(color="black")
+
         for unit in drawable:
             unit.draw(screen)
+                
         pygame.display.flip()
+
         time_passed = clock.tick(60)
         dt = time_passed / 1000.0  # Convert milliseconds to seconds
         
-
-
 if __name__ == "__main__":
     main()
