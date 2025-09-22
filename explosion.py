@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 from circleshape import CircleShape
 
 class Explosion(CircleShape):
@@ -6,7 +6,7 @@ class Explosion(CircleShape):
         super().__init__(x, y, radius)
         
     def draw(self, screen):
-        pygame.draw.circle(
+        pg.draw.circle(
             screen,
             color="red",
             center=self.position,

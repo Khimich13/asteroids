@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 import random
 from circleshape import CircleShape
 from constants import *
@@ -18,7 +18,7 @@ class Asteroid(CircleShape):
         self.position += self.velocity * dt
 
     def draw(self, screen):
-        pygame.draw.circle(
+        pg.draw.circle(
             screen, 
             color="white", 
             center=self.position, 

@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
@@ -7,15 +7,18 @@ from explosion import Explosion
 from constants import *
 
 def main():
-    pygame.init()
-    clock = pygame.time.Clock()
+    pg.init()
+    clock = pg.time.Clock()
     dt = 0
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pg.SCALED)
+    pg.display.set_caption("Asteroids")
 
-    updatable = pygame.sprite.Group()
-    drawable = pygame.sprite.Group()
-    asteroids = pygame.sprite.Group()
-    shots = pygame.sprite.Group()
+    background = pg.image.load("images/background.jpg").convert()
+
+    updatable = pg.sprite.Group()
+    drawable = pg.sprite.Group()
+    asteroids = pg.sprite.Group()
+    shots = pg.sprite.Group()
 
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
@@ -29,8 +32,8 @@ def main():
     running = True
     
     while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
                 return
             
         updatable.update(dt)
@@ -48,12 +51,12 @@ def main():
                     asteroid.split()
                     bullet.kill()
 
-        screen.fill(color="black")
+        screen.blit(background, (0, 0))
 
         for unit in drawable:
             unit.draw(screen)
-                
-        pygame.display.flip()
+
+        pg.display.flip()
 
         time_passed = clock.tick(60)
         dt = time_passed / 1000.0  # Convert milliseconds to seconds

@@ -1,7 +1,7 @@
-import pygame
+import pygame as pg
 
 # Base class for game objects
-class CircleShape(pygame.sprite.Sprite):
+class CircleShape(pg.sprite.Sprite):
     def __init__(self, x, y, radius):
         # we will be using this later
         if hasattr(self, "containers"):
@@ -9,8 +9,8 @@ class CircleShape(pygame.sprite.Sprite):
         else:
             super().__init__()
 
-        self.position = pygame.Vector2(x, y)
-        self.velocity = pygame.Vector2(0, 0)
+        self.position = pg.Vector2(x, y)
+        self.velocity = pg.Vector2(0, 0)
         self.radius = radius
 
     def collision_check(self, other_object):

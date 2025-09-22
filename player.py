@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 from circleshape import CircleShape
 from shot import Shot
 from constants import *
@@ -7,7 +7,7 @@ from constants import *
 class Player(CircleShape):
     def __init__ (self, x, y):
         super().__init__(x, y, PLAYER_RADIUS)
-        self.velocity = pygame.Vector2(0, 0)
+        self.velocity = pg.Vector2(0, 0)
         self.rotation = 0
         self.timer = 0
         self.score = 0
@@ -16,17 +16,17 @@ class Player(CircleShape):
 
     # in the player class
     def triangle(self):
-        forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
+        forward = pg.Vector2(0, 1).rotate(self.rotation)
+        right = pg.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
         a = self.position + forward * self.radius
         b = self.position - forward * self.radius - right
         c = self.position - forward * self.radius + right
         return [a, b, c]
     
     def spawn(self, asteroids):
-        self.velocity = pygame.Vector2(0, 0)
+        self.velocity = pg.Vector2(0, 0)
         self.rotation = 0
-        self.position = pygame.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        self.position = pg.Vector2(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         for asteroid in asteroids:
             distance = asteroid.position.distance_to(self.position)
             if distance <= asteroid.radius + self.radius + MAX_SAFE_DISTANCE:
@@ -37,30 +37,30 @@ class Player(CircleShape):
         self.rotation += PLAYER_TURN_SPEED * dt
 
     def move(self, dt):
-        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        forward = pg.Vector2(0, 1).rotate(self.rotation)
         if (self.speed < PLAYER_MAX_SPEED):
             self.speed += PLAYER_ACCELERATION
         self.position += forward * self.speed * dt
 
     def update(self, dt):
         self.timer -= dt
-        keys = pygame.key.get_pressed()
+        keys = pg.key.get_pressed()
 
-        if keys[pygame.K_a]:
+        if keys[pg.K_a]:
             self.rotate(-dt)
-        if keys[pygame.K_d]:
+        if keys[pg.K_d]:
             self.rotate(dt)
-        if keys[pygame.K_w]:
+        if keys[pg.K_w]:
             self.move(dt)
-        if keys[pygame.K_s]:
+        if keys[pg.K_s]:
             self.move(-dt)
-        if keys[pygame.K_SPACE]:
+        if keys[pg.K_SPACE]:
             self.shoot()
         if self.speed > PLAYER_MIN_SPEED:
             self.speed -= PLAYER_ACCELERATION / 2
 
     def draw(self, screen):
-        pygame.draw.polygon(
+        pg.draw.polygon(
             screen,
             color="white",
             points=self.triangle(),
@@ -71,7 +71,7 @@ class Player(CircleShape):
         if self.timer > 0:
             return
         shot = Shot(self.position.x, self.position.y)
-        shot.velocity = pygame.Vector2(0,1).rotate(self.rotation)
+        shot.velocity = pg.Vector2(0,1).rotate(self.rotation)
         shot.velocity *= PLAYER_SHOOT_SPEED
         self.timer = PLAYER_SHOOT_COOLDOWN
 
