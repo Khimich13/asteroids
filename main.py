@@ -2,7 +2,8 @@ import pygame as pg
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
-from shot import Shot
+from bulletshot import BulletShot
+from lasershot import LaserShot
 from explosion import Explosion
 from constants import *
 
@@ -23,7 +24,8 @@ def main():
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = updatable
-    Shot.containers = (shots, updatable, drawable)
+    BulletShot.containers = (shots, updatable, drawable)
+    LaserShot.containers = (shots, updatable, drawable)
     Explosion.containers = drawable
 
     player = Player(CENTER_X, CENTER_Y)
@@ -48,8 +50,10 @@ def main():
                 if asteroid.collision_check(bullet):
                     player.score += 1
                     Explosion(asteroid.position.x, asteroid.position.y, asteroid.radius)
+                    if isinstance(bullet, BulletShot):
+                        bullet.kill()
                     asteroid.split()
-                    bullet.kill()
+                    
 
         screen.blit(background, (0, 0))
 

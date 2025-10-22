@@ -1,6 +1,7 @@
 import pygame as pg
 from circleshape import CircleShape
-from shot import Shot
+from bulletshot import BulletShot
+from lasershot import LaserShot
 from constants import *
 
 
@@ -9,10 +10,12 @@ class Player(CircleShape):
         super().__init__(x, y, PLAYER_RADIUS)
         self.velocity = pg.Vector2(0, 0)
         self.rotation = 0
-        self.timer = 0
+        self.spc_btn_timer = 0
+        self.tab_btn_timer = 0
         self.score = 0
         self.lives = PLAYER_INITIAL_LIVES
         self.speed = PLAYER_MIN_SPEED
+        self.current_weapon = WEAPON.Bullet
 
     # in the player class
     def triangle(self):
@@ -32,7 +35,6 @@ class Player(CircleShape):
             if distance <= asteroid.radius + self.radius + MAX_SAFE_DISTANCE:
                 asteroid.kill()
 
-    
     def rotate(self, dt):
         self.rotation += PLAYER_TURN_SPEED * dt
 
@@ -43,7 +45,8 @@ class Player(CircleShape):
         self.position += forward * self.speed * dt
 
     def update(self, dt):
-        self.timer -= dt
+        self.spc_btn_timer -= dt
+        self.tab_btn_timer -= dt
         keys = pg.key.get_pressed()
 
         if keys[pg.K_a]:
@@ -56,6 +59,11 @@ class Player(CircleShape):
             self.move(-dt)
         if keys[pg.K_SPACE]:
             self.shoot()
+        if keys[pg.K_TAB]:
+            if (self.tab_btn_timer <= 0):
+                self.change_weapon()
+                self.tab_btn_timer = TAB_BTN_COOLDOWN
+
         if self.speed > PLAYER_MIN_SPEED:
             self.speed -= PLAYER_ACCELERATION / 2
 
@@ -68,12 +76,20 @@ class Player(CircleShape):
         )
     
     def shoot(self):
-        if self.timer > 0:
+        if self.spc_btn_timer > 0:
             return
-        shot = Shot(self.position.x, self.position.y)
-        shot.velocity = pg.Vector2(0,1).rotate(self.rotation)
-        shot.velocity *= PLAYER_SHOOT_SPEED
-        self.timer = PLAYER_SHOOT_COOLDOWN
+        match (self.current_weapon):
+            case WEAPON.Bullet:
+                shot = BulletShot(self.position.x, self.position.y)
+                shot.velocity = pg.Vector2(0,1).rotate(self.rotation)
+                shot.velocity *= BULLET_SHOOT_SPEED
+                self.spc_btn_timer = BULLET_SHOT_COOLDOWN
+
+            case WEAPON.Laser:
+                shot = LaserShot(self.position.x, self.position.y)
+                shot.velocity = pg.Vector2(0,1).rotate(self.rotation)
+                shot.velocity *= LASER_SHOOT_SPEED
+                self.spc_btn_timer = LASER_SHOT_COOLDOWN
 
     def collided(self):
         self.lives -= 1
@@ -85,6 +101,12 @@ class Player(CircleShape):
             print(f"Your score is {self.score} point(s)")
             return True
         return False
+    
+    def change_weapon(self):
+        if self.current_weapon.value < WEAPON.Max.value:
+            self.current_weapon = WEAPON(self.current_weapon.value + 1)
+        else:
+            self.current_weapon = WEAPON(1)
         
         
 
