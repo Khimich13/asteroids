@@ -14,10 +14,8 @@ class CircleShape(pg.sprite.Sprite):
         self.radius = radius
 
     def collision_check(self, other_object):
-        return(
-            self.position.distance_to(other_object.position) 
-            <= self.radius + other_object.radius
-        )
+        # sub-classes must override
+        pass
 
     def draw(self, screen):
         # sub-classes must override

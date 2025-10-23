@@ -2,6 +2,7 @@ import pygame as pg
 from circleshape import CircleShape
 from bulletshot import BulletShot
 from lasershot import LaserShot
+from helper import *
 from constants import *
 
 
@@ -16,6 +17,7 @@ class Player(CircleShape):
         self.lives = PLAYER_INITIAL_LIVES
         self.speed = PLAYER_MIN_SPEED
         self.current_weapon = WEAPON.Bullet
+        self.edges = None
 
     # in the player class
     def triangle(self):
@@ -68,10 +70,11 @@ class Player(CircleShape):
             self.speed -= PLAYER_ACCELERATION / 2
 
     def draw(self, screen):
+        self.edges = self.triangle()
         pg.draw.polygon(
             screen,
             color="white",
-            points=self.triangle(),
+            points=self.edges,
             width=2
         )
     
@@ -107,7 +110,9 @@ class Player(CircleShape):
             self.current_weapon = WEAPON(self.current_weapon.value + 1)
         else:
             self.current_weapon = WEAPON(1)
-        
-        
 
-    
+    def collision_check(self, other_object):
+        if self.position.distance_to(other_object.position) < self.radius + other_object.radius:
+            print(f"test")
+            return polygons_collide(self.edges, other_object.edges)
+        return False

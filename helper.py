@@ -1,5 +1,6 @@
 import math
 import random
+import pygame as pg
 from constants import *
 
 def generate_lumpy_shape_points(center, base_radius, num_points, max_variation):
@@ -19,3 +20,24 @@ def is_moving_further_offscreen(pos, new_pos):
     ) or (
         (new_pos.y < 0 or new_pos.y > SCREEN_HEIGHT) and abs(new_pos.y) > abs(pos.y)
     )
+
+def polygons_collide(poly1, poly2):
+    def to_int_points(points):
+        return [tuple(map(int, (p.x, p.y))) if hasattr(p, "x") else tuple(map(int, p)) for p in points]
+
+    p1 = to_int_points(poly1)
+    p2 = to_int_points(poly2)
+
+    all_x = [x for x, _ in p1 + p2]
+    all_y = [y for _, y in p1 + p2]
+    min_x, max_x = min(all_x), max(all_x)
+    min_y, max_y = min(all_y), max(all_y)
+    size = (max_x - min_x + 1, max_y - min_y + 1)
+
+    def make_mask(points):
+        shifted = [(x - min_x, y - min_y) for x, y in points]
+        surf = pg.Surface(size, pg.SRCALPHA)
+        pg.draw.polygon(surf, (255, 255, 255, 255), shifted)
+        return pg.mask.from_surface(surf)
+
+    return make_mask(p1).overlap(make_mask(p2), (0, 0)) is not None

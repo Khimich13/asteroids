@@ -41,7 +41,7 @@ def main():
         updatable.update(dt)
 
         for asteroid in asteroids:
-            if asteroid.collision_check(player):
+            if player.collision_check(asteroid):
                 player.collided()
                 if player.is_dead():
                     return
