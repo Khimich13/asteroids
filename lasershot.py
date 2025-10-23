@@ -18,7 +18,7 @@ class LaserShot(CircleShape):
             color="yellow", 
             center=self.position - (self.velocity * i * (i / 4000)), 
             radius=self.radius, 
-            width=10
+            width=0
             )
         if self.times_drawn < LASER_LENGTH:
             self.times_drawn += 1

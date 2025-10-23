@@ -1,28 +1,29 @@
 import pygame as pg
 import random
+import helper
 from circleshape import CircleShape
 from constants import *
 
 class Asteroid(CircleShape):
     def __init__ (self, x, y, radius):
         super().__init__(x, y, radius)
+        self.edges = helper.generate_lumpy_shape_points(self.position, self.radius, NUM_ASTEROID_EDGES, ASTEROID_EDGES_VARIATION)
 
     def update(self, dt):
-        trajactory = self.position + self.velocity * dt
+        trajectory = self.position + self.velocity * dt
         random_angle = random.uniform(-180, 180)
-        off_height = (trajactory.y < 0 or trajactory.y > SCREEN_HEIGHT) and abs(trajactory.y) > abs(self.position.y)
-        off_width = (trajactory.x < 0 or trajactory.x > SCREEN_WIDTH) and abs(trajactory.x) > abs(self.position.x)
-        if off_height or off_width:
+        if helper.is_moving_further_offscreen(self.position, trajectory):
             self.velocity = self.velocity.rotate(random_angle)
             
         self.position += self.velocity * dt
+        self.edges = [edge + self.velocity * dt for edge in self.edges]
+
 
     def draw(self, screen):
-        pg.draw.circle(
+        pg.draw.polygon(
             screen, 
             color="white", 
-            center=self.position, 
-            radius=self.radius, 
+            points=self.edges,
             width=2
             )
         
@@ -35,6 +36,6 @@ class Asteroid(CircleShape):
         vector2 = self.velocity.rotate(-random_angle)
         new_radius = self.radius - ASTEROID_MIN_RADIUS
         asteroid1 = Asteroid(self.position.x, self.position.y, new_radius)
-        asteroid1.velocity = vector1 * 1.2
+        asteroid1.velocity = vector1 * SPLIT_ASTEROID_VELOCITY_MODIFIER
         asteroid2 = Asteroid(self.position.x, self.position.y, new_radius)
-        asteroid2.velocity = vector2 * 1.2
+        asteroid2.velocity = vector2 * SPLIT_ASTEROID_VELOCITY_MODIFIER
