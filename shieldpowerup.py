@@ -1,7 +1,6 @@
 import pygame as pg
 from circleshape import CircleShape
 from shield import Shield
-from helper import *
 from constants import *
 
 class ShieldPowerup(CircleShape):

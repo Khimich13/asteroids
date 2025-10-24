@@ -1,6 +1,6 @@
+import pygame as pg
 import math
 import random
-import pygame as pg
 from constants import *
 
 def generate_lumpy_shape_points(center, base_radius, num_points, max_variation):

@@ -1,7 +1,5 @@
 import pygame as pg
 from circleshape import CircleShape
-from helper import *
-from constants import *
 
 class Shield(CircleShape):
     def __init__ (self, x, y, radius, player):
@@ -14,7 +12,7 @@ class Shield(CircleShape):
             color="blue", 
             center=self.player.position,
             radius=self.radius,
-            width=2
+            width=4
             )
 
     def update(self, dt):

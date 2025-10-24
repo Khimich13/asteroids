@@ -9,6 +9,7 @@ from bulletshot import BulletShot
 from lasershot import LaserShot
 from explosion import Explosion
 from shield import Shield
+from bomb import Bomb
 from constants import *
 
 def main():
@@ -26,6 +27,7 @@ def main():
     powerups = pg.sprite.Group()
     shots = pg.sprite.Group()
     shields = pg.sprite.Group()
+    bombs = pg.sprite.Group()
 
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
@@ -37,6 +39,7 @@ def main():
     LaserShot.containers = (shots, updatable, drawable)
     Explosion.containers = drawable
     Shield.containers = (shields, updatable, drawable)
+    Bomb.containers = (bombs, drawable)
 
     player = Player(CENTER_X, CENTER_Y)
     AsteroidField()
@@ -52,6 +55,9 @@ def main():
         updatable.update(dt)
 
         for asteroid in asteroids:
+            for bomb in bombs:
+                if asteroid.collision_check(bomb):
+                    bomb.destroyed(asteroids, player)
 
             for shield in shields:
                 if asteroid.collision_check(shield):

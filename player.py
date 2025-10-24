@@ -2,6 +2,7 @@ import pygame as pg
 from circleshape import CircleShape
 from bulletshot import BulletShot
 from lasershot import LaserShot
+from bomb import Bomb
 from helper import *
 from constants import *
 
@@ -13,6 +14,7 @@ class Player(CircleShape):
         self.rotation = 0
         self.spc_btn_timer = 0
         self.tab_btn_timer = 0
+        self.e_btn_timer = 0
         self.score = 0
         self.lives = PLAYER_INITIAL_LIVES
         self.speed = PLAYER_MIN_SPEED
@@ -20,6 +22,7 @@ class Player(CircleShape):
         self.edges = None
         self.shot_speed_powerup_time_left = 0
         self.shield_powerup_time_left = 0
+        self.bombs_amount = BOMBS_GIVEN
 
     # in the player class
     def triangle(self):
@@ -51,8 +54,8 @@ class Player(CircleShape):
     def update(self, dt):
         self.spc_btn_timer -= dt
         self.tab_btn_timer -= dt
+        self.e_btn_timer -= dt
         self.shot_speed_powerup_time_left -= dt
-        self.shield_powerup_time_left -= dt
         keys = pg.key.get_pressed()
 
         if keys[pg.K_a]:
@@ -65,10 +68,14 @@ class Player(CircleShape):
             self.move(-dt)
         if keys[pg.K_SPACE]:
             self.shoot()
+        if keys[pg.K_e]:
+            if (self.e_btn_timer <= 0):
+                self.e_btn_timer = BTN_COOLDOWN
+                self.place_bomb()
         if keys[pg.K_TAB]:
             if (self.tab_btn_timer <= 0):
                 self.change_weapon()
-                self.tab_btn_timer = TAB_BTN_COOLDOWN
+                self.tab_btn_timer = BTN_COOLDOWN
 
         if self.speed > PLAYER_MIN_SPEED:
             self.speed -= PLAYER_ACCELERATION / 2
@@ -102,6 +109,11 @@ class Player(CircleShape):
         if (self.shot_speed_powerup_time_left > 0):
             shot.velocity *= SHOT_SPEED_POWERUP_RATE
             self.spc_btn_timer /= 2
+
+    def place_bomb(self):
+        if (self.bombs_amount > 0):
+            Bomb(self.position.x, self.position.y, self.radius)
+            self.bombs_amount -= 1
 
     def collided(self):
         self.lives -= 1

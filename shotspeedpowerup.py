@@ -1,6 +1,5 @@
 import pygame as pg
 from circleshape import CircleShape
-from helper import *
 from constants import *
 
 class ShotSpeedPowerup(CircleShape):
