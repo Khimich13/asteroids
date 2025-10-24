@@ -18,6 +18,8 @@ class Player(CircleShape):
         self.speed = PLAYER_MIN_SPEED
         self.current_weapon = WEAPON.Bullet
         self.edges = None
+        self.shot_speed_powerup_time_left = 0
+        self.shield_powerup_time_left = 0
 
     # in the player class
     def triangle(self):
@@ -49,6 +51,8 @@ class Player(CircleShape):
     def update(self, dt):
         self.spc_btn_timer -= dt
         self.tab_btn_timer -= dt
+        self.shot_speed_powerup_time_left -= dt
+        self.shield_powerup_time_left -= dt
         keys = pg.key.get_pressed()
 
         if keys[pg.K_a]:
@@ -81,6 +85,7 @@ class Player(CircleShape):
     def shoot(self):
         if self.spc_btn_timer > 0:
             return
+        
         match (self.current_weapon):
             case WEAPON.Bullet:
                 shot = BulletShot(self.position.x, self.position.y)
@@ -93,6 +98,10 @@ class Player(CircleShape):
                 shot.velocity = pg.Vector2(0,1).rotate(self.rotation)
                 shot.velocity *= LASER_SHOOT_SPEED
                 self.spc_btn_timer = LASER_SHOT_COOLDOWN
+
+        if (self.shot_speed_powerup_time_left > 0):
+            shot.velocity *= SHOT_SPEED_POWERUP_RATE
+            self.spc_btn_timer /= 2
 
     def collided(self):
         self.lives -= 1
@@ -113,6 +122,5 @@ class Player(CircleShape):
 
     def collision_check(self, other_object):
         if self.position.distance_to(other_object.position) < self.radius + other_object.radius:
-            print(f"test")
             return polygons_collide(self.edges, other_object.edges)
         return False

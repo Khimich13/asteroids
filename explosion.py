@@ -17,6 +17,6 @@ class Explosion(CircleShape):
         
     def shrink(self):
         self.radius -= 1
-        if self.radius == 0:
+        if self.radius <= 0:
             self.kill()
     

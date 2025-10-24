@@ -1,6 +1,7 @@
 import pygame as pg
 import random
 from circleshape import CircleShape
+from explosion import Explosion
 from helper import *
 from constants import *
 
@@ -44,3 +45,8 @@ class Asteroid(CircleShape):
         return(
             self.position.distance_to(other_object.position) 
             <= self.radius + other_object.radius)
+    
+    def destroyed(self, player):
+        player.score += 1
+        Explosion(self.position.x, self.position.y, self.radius)
+        self.split()
