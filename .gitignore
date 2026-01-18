@@ -9,3 +9,6 @@ images/
 
 # Virtual environments
 .venv
+
+# Logging 
+game_state.jsonl
